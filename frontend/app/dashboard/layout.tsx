@@ -17,12 +17,30 @@ export default async function DashboardLayout({
     redirect("/auth/login");
   }
 
-  const { data: profile } = await supabase
+  let { data: profile } = await supabase
     .from("profiles")
     .select("*")
-    .eq("id", user.id)
+    .eq("id", user!.id)
     .single();
 
+  // Se o perfil não existe ainda, cria automaticamente (primeiro acesso)
+  if (!profile) {
+    const { data: newProfile } = await supabase
+      .from("profiles")
+      .insert({
+        id: user!.id,
+        email: user!.email ?? "",
+        full_name: user!.user_metadata?.full_name ?? user!.email?.split("@")[0] ?? "Usuário",
+        role: "solicitante" as const,
+        is_active: true,
+      })
+      .select("*")
+      .single();
+
+    profile = newProfile;
+  }
+
+  // Se ainda assim não conseguiu perfil, redireciona para login
   if (!profile) {
     redirect("/auth/login");
   }
