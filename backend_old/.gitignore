@@ -1,0 +1,24 @@
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+
+# Database
+*.db
+*.sqlite3
+
+# Uploads
+uploads/
+
+# Virtual environments
+venv/
+env/
+ENV/
+.env/
+
+# Distributions
+dist/
+build/
+*.egg-info/
